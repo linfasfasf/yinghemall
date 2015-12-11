@@ -1,0 +1,202 @@
+
+﻿ ﻿ ﻿ ﻿ ﻿ ﻿ ﻿ ﻿
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8"/>
+<meta http-equiv='Cache-Control' content='ust-revalidate' forua='true'/>
+<meta http-equiv='Cache-Control' content='no-cache' forua='true'/>
+<meta http-equiv='Cache-Control' content='max-age=0' forua='true'/>
+<meta http-equiv='Expires' content='0' forua='true'/>
+<meta http-equiv='Pragma' content='no-cache' forua='true'/>
+<load href="__PUBLIC__/css/bootstrap.min.css" />
+<load href="__PUBLIC__/js/jquery.min.js"/>
+<load href="__PUBLIC__/js/bootstrap.min.js"/>
+    <js href="__PUBLIC__/js/jquery-2.0.2.js" />
+    <js href="__PUBLIC__/ueditor/ueditor.config.js" />
+    <js href="__PUBLIC__/ueditor/ueditor.all.min.js" />
+    <script>
+        $(function(){
+            var ue = UE.getEditor('container',{
+                serverUrl :"{:U('Home/index/ueditor')}"
+            });
+        });
+
+//            setInterval("getinfo()",5000);
+
+
+        function getinfo() {
+            $.ajax({
+                type: "post",
+                url: "{:U('get_ajax')}",
+                data: $('#form_submit').serialize(),
+                async: false,
+                success: function (data) {
+                }
+            })
+        }
+    </script>
+</head>
+<title>你好</title>
+</head><body align="left">
+<div class="container-fluid">
+    
+        <div class="row-fluid ">
+            <nav class="navbar navbar-default navbar-fixed-top">
+		<div class="span12">
+			<div class="navbar navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						 <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a> <a href="#" class="brand">LERO_LIN 快乐阅读</a>
+						<div class="nav-collapse collapse navbar-responsive-collapse">
+							<ul class="nav">
+								<li >
+									<a href="{:U('Home/lero/writing')}">WRITING</a>
+								</li>
+								<li class="active">
+                                                                    <a href="{:U('Home/lero/index')}" target="_parent">文章目录</a>
+								</li>
+								<li class="dropdown" >
+									 <a data-toggle="dropdown" class="dropdown-toggle" href="#">下拉菜单<strong class="caret"></strong></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+										<li>
+											<a href="#">下拉导航1</a>
+										</li>
+										<li>
+											<a href="#">下拉导航2</a>
+										</li>
+										<li>
+											<a href="#">其他</a>
+										</li>
+										<li class="divider">
+										</li>
+										<li class="nav-header">
+											标签
+										</li>
+										<li>
+											<a href="#">链接1</a>
+										</li>
+										<li>
+											<a href="#">链接2</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<ul class="nav pull-right">
+								<li>
+                                                                    <a href="#">退出</a>
+								</li>
+								<li class="divider-vertical">
+								</li>
+							</ul>
+						</div>
+						
+					</div>
+				</div>
+				
+			</div>
+		</div>
+            </nav>
+	</div>
+        <div class="row-fluid">
+		<div class="span2">
+		</div>
+		<div class="span6">
+		</div>
+		<div class="span4">
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span2">
+		</div>
+		<div class="span6">
+		</div>
+		<div class="span4">
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span2">
+		</div>
+		<div class="span6">
+			<h2>最新动态</h2>
+			<p>
+                        
+                            
+                                
+                            <foreach name="preview" item="vo">
+                                <hr>
+                                <h3>{$vo['title']}</h3>
+									<p>
+                                    <!--<a href="#" cass=""><img src="__PUBLIC__/images/login_008.jpg" class="img-rounded" style="height: 100px;width: 100px;" alt="..."></a>-->
+                                    <div class="well">
+                                    <a href="{:U('show_article')}?path={$vo['path']}&filename={$vo['filename']}">		{$vo['preview']}</a>
+                                </div>
+
+                                <p>
+									<!--<a href="show_article?path={$vo['path']}&filename={$vo['filename']}">{$vo['filename']}</a>-->
+									<!--<a href="next_page?path={$vo['path']}&filename={$vo['filename']}">下一页</a>-->
+                                    <!--<a class="btn" href="#">查看更多 »</a>-->
+                                    <a href="{:U('Home/index/delete_article')}?id={$vo['id']}"><button class="btn btn-danger btn-small" style="float:right" type="button" >删除</button></a>
+                                </p></p>
+                            </foreach>
+
+
+
+
+                                <!--<img src="http://q3.qlogo.cn/g?b=qq&k=wCKpKDmD9mgF5hRWE6CMlw&s=100&t=1373860817" alt="zhihu">-->
+                                <br>
+                               <div >
+                                  <script id="container1" name="content" type="text/plain">开始使用</script>
+
+                               </div>
+
+                                <!--<form action="{:U('get_editor')}" method="get" id="form_submit" enctype="multipart/form-data">-->
+                                    <!--<script id="container" name="content" type="text/plain">开始1s使用</script><br>-->
+                                    <!--<input class="btn" type="submit" style="float: right" value="提交">-->
+                                <!--</form>-->
+
+			<p>
+				<a class="btn" href="#">返回顶部</a>
+			</p>
+			
+		</div>
+                
+		<div class="span4">
+			<blockquote>
+				<p>
+					THINKING LEARNING
+				</p> <small>KEY : <cite>lero_lin</cite></small>
+			</blockquote>
+                    <div>
+                    <embed wmode="transparent" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_tr.swf" 
+                           quality="high" bgcolor="#ffffff" width="200" height="150" name="honehoneclock" align="center" 
+                           allowscriptaccess="always" type="application/x-shockwave-flash" 
+                           pluginspage="http://www.macromedia.com/go/getflashplayer">
+                    </div><br>
+
+            <a class="btn" href="{:U('Home/index/upload')}">上传文件</a>
+                    
+		</div>
+	</div>
+</div>
+    
+    
+    
+            <script type="text/javascript">
+$(function(){
+    var width=window.screen.height;
+    var height=window.screen.width;
+    $.post('get_client_heoght',{w:width,h:height});//这里向你的统计文件里面传入相关的参数
+    
+});
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

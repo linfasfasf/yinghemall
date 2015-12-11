@@ -1,0 +1,46 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LERO阅读平台</title>
+<link rel="stylesheet" type="text/css" href="/Public/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="/Public/css/bootstrap.min.css"/>
+<script src="/Public/js/jquery.min.js"></script>
+
+</head>
+<body>
+    <div id="center_1"><h1>LERO阅读平台</h1></div>
+<div id="top"></div>
+
+<form id="login" name="login" action="login" method="post">
+  <div id="center">
+    <!-- <div id="center_left"></div> -->
+    <div id="center_middle">
+      <div class="login_box">
+        <div class="user">
+          <label>用户名:
+          <input type='text' name='identity' />
+          </label>
+        </div>
+        <div class="user">
+          <label>密　码:
+          <input type='password' name='password' />
+          </label>
+        </div>
+<!--
+        <div class="captcha">
+        <label>验证码: <input type='text' name='captcha' /><a href="#" id="captcha"><?php echo $captcha;?></a></label>
+        </div>
+-->
+<!--        <input type="hidden" name="url" id="url" value="<?php echo isset($url)?$url:""?>">-->
+        <button class="button" type="submit">登 录</button>
+<p><a href="register">注册</a></p>
+        <?php if(isset($sso_signin_url) && $sso_signin_url) {?>&nbsp;<a href="#">使用开发者帐号登录</a><?php } ?>
+        <?php if(isset($flash_message)) echo $flash_message;?>
+      </div>
+    </div>
+  </div>
+</form>
+<div id="footer"></div>
+</body>
+</html>
