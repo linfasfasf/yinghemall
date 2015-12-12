@@ -62,7 +62,7 @@ class MessageController extends Controller {
 //        dump($cart_info);
 //        var_dump($data);
         $this->assign('session_info',session('cart_info'));//session必须重新取一次
-        $this->display('index/cart');
+        $this->display('Index/cart');
     }
 
 
