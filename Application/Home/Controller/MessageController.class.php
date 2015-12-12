@@ -18,7 +18,7 @@ class MessageController extends Controller {
         $this->assign('product_suggest',$this->product_suggest());
 
         $this->assign('product_info',$tea_info);
-        $this->display('index/show_msg');
+        $this->display('Index/show_msg');
     }
 
     public function buy_now(){
