@@ -1,7 +1,10 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
-class IndexController extends AdminController {
+class IndexController extends Controller {
+    /*
+     * 显示首页信息
+     */
     public function index(){
         $tea = D('Home/Guanyintea');
         $len = C('PAGE_SHOW_NUM');
@@ -18,7 +21,9 @@ class IndexController extends AdminController {
         
     }
 
-
+    /*
+     * 首页商品信息显示下一页
+     */
     public function next_page(){
         $page = I('get.p');
         $tea = D('Home/Guanyintea');

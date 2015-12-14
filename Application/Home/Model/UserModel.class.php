@@ -2,6 +2,11 @@
 namespace Home\Model;
 use Think\Model;
 class UserModel extends Model{
+    protected $_validate = array(
+        array('email','require','email require '),
+        array('email','email','邮箱格式不符合'),
+        array('emial',array('254430304@qq.com'),'zaizheli ',2,'in'),
+    );
     
     /*
      * 获取登陆信息
@@ -53,5 +58,33 @@ class UserModel extends Model{
         return $user->where('id=%d',$id)->delete();
     }
 
-
+    /*
+     * 检测手机是否存在
+     * 未启用，需数据库添加字段
+     */
+    public function check_mobile(){
+        $user = M('User');
+        $data['mobile'] = I('mobile');
+        $data['username']  = I('email');
+        $data['_logic'] ='OR';
+        $result = $user->field('id')->where($data)->select();
+        if($result){
+            return true;
+        }
+        return false;
+    }
+    /*
+     * 插入数据库，成功返回true
+     */
+    public function create_account($email,$mobile,$password,$name){
+        $user = M('User');
+        $data['username']   = $email;
+        $data['password']   = md5($password);
+        $data['mobile']     = $mobile;
+        $data['nickname']   = $name;
+        if(!$user->add($data)){
+            return false;
+        }
+        return true;
+    }
 }
