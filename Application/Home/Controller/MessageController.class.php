@@ -65,6 +65,20 @@ class MessageController extends Controller {
         $this->display('Index/cart');
     }
 
+    /*
+     * 显示购物车信息，显示session中的商品信息
+     */
+    public function cart_info(){
+        $cart_info = session('cart_info');
+        $tea       = D('Guanyintea');
+        foreach ($cart_info as $item=>$value) {
+            $tea_info  = $tea->get_product_by_id_return_arr($item);
+        }
+        $this->assign('product_info',$tea_info);
+        $this->assign('session_info',session('cart_info'));
+        $this->display('Index/cart');
+    }
+
 
     /*
      * 获取购物车信息

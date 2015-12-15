@@ -87,4 +87,23 @@ class UserModel extends Model{
         }
         return true;
     }
+    /*
+     * 验证登录账号以及密码，记录登录信息到session
+     */
+    public function login($username,$password){
+        $user               = M('User');
+        $map['username']  = $username;
+        $map['password']  = md5($password);
+        $result =$user->where($map)->select();
+        $data['user_info']['uid']           = $result[0]['uid'];
+        $data['user_info']['nickname']     = $result[0]['nickname'];
+        $data['user_info']['username']     = $result[0]['username'];
+        session('user_info',$data);
+        if($result){
+            return true;
+        }
+        return false;
+    }
+
+
 }

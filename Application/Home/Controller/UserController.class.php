@@ -8,7 +8,7 @@ class UserController extends Controller{
     }
     
     public function index(){
-        $this->display();
+        $this->display('Index/login');
     }
     
     /*
@@ -17,12 +17,34 @@ class UserController extends Controller{
      * TODO :登陆验证，验证码检测
      */
     public function login(){
-        $is_login = session('username');
-        $user = D('Home/User');
-        $get_user = $user->get_user();
-        session('user_name',$get_user['username']);
-        var_dump(session());
-        redirect('/Home/index/index');
+        $refer_page = $_SERVER['HTTP_REFERER'];
+        session('refer_page',$refer_page);
+        $user_info = session('user_info');
+
+        if(isset($user_info)){
+            $msg        = '您已登录，无须重复登录！';
+            $this->assign('refer_page',session('refer_page'));
+            $this->assign('msg',$msg);
+        }else{
+            $user_name = I('username');
+            $pssword   = I('password');
+//            var_dump($user_name);
+            if(empty($user_name)|empty($pssword)){
+                $this->index();
+                exit();
+            }
+            $user   = D('User');
+            $result  = $user->login($user_name,$pssword);
+            if($result){
+                $msg    = '恭喜您，登录成功！';
+                $this->assign('refer_page',session('refer_page'));
+            }else{
+                $msg    = '登录失败，请重新登录。';
+            }
+        }
+        $this->assign('msg',$msg);
+//        var_dump($msg);
+        $this->display('Index/login');
     }
 
     /*
@@ -51,8 +73,8 @@ class UserController extends Controller{
         }else{
             $msg = '恭喜，注册成功！';
         }
-        $this->assign('msg',$msg);
 
+        $this->assign('msg',$msg);
         $this->display('Index/register');
     }
     
@@ -60,7 +82,7 @@ class UserController extends Controller{
      * 登出
      */
     public function logout(){
-        session('user_name',NULL);
+        session('user_info',NULL);
         echo 'logout success';
     }
 
