@@ -153,7 +153,7 @@ a:hover{text-decoration:underline}
 
 .product-img-box{ float:left; width:410px}
 .more-views {width:380px; overflow:hidden; margin:10px 15px; position:relative}
-.more-views .next{ width:14px; position:absolute; right:0; top:0; height:80px; display:block; cursor:pointer; background:url(../images/base.png) no-repeat right -175px}
+.more-views .next{ width:14px; position:absolute; right:0; top:0; height:80px; display:block; cursor:pointer; background:url(./images/base.png) no-repeat right -175px}
 .next#btn_prev{left:0; right:auto; background-position:right -240px}
 .more-views .product_s_images{width:352px; overflow:hidden; margin:0 0 0 15px; height:86px}
 .more-views li{ padding:2px; background:#FFF; float:left; margin:0 1px}
@@ -196,7 +196,7 @@ a:hover{text-decoration:underline}
 .newbie{ padding-bottom:15px; text-align:center}
   .newbie_left{width:830px; float:left;}
     .newbie_left dl{float:left; width:160px; text-align:left; padding-top:8px}
-    .newbie_left dt{font-size:12px; font-weight:900; color:#000; height:24px;  padding-left:20px; margin-bottom:5px; background:url(../images/footer_bg.png) no-repeat; text-indent:-9999px; }
+    .newbie_left dt{font-size:12px; font-weight:900; color:#000; height:24px;  padding-left:20px; margin-bottom:5px; background:url(./images/footer_bg.png) no-repeat; text-indent:-9999px; }
     .newbie_left .help2 dt{background-position:0 -24px}
     .newbie_left .help1 dt{background-position:0 -48px}
     .newbie_left .help4 dt{background-position:0 -74px}
@@ -388,7 +388,7 @@ a:hover{text-decoration:underline}
 .order_totals { float:right; text-align:left; font:14px/23px Arial, Helvetica, sans-serif; padding:20px 0; }
 .order_totals .gray12{padding:0 10px 0 0; line-height:39px}
 .mk_onepage .order_totals { padding:5px 10px; text-align:right}
-.comment-form{ padding:10px; border:1px solid #e4e4e4; margin-bottom:8px; background:#F9F9F9 url(../images/order_table_bg.gif) repeat-x 0 bottom}
+.comment-form{ padding:10px; border:1px solid #e4e4e4; margin-bottom:8px; background:#F9F9F9  repeat-x 0 bottom}
 .comment-form textarea{ height:54px; border:1px solid #d6d6d6; padding:3px}
 #comment-form{ float:left}
 .mk_onepage .product h4{font-size:14px; padding:0 20px 8px}
@@ -450,7 +450,7 @@ a:hover{text-decoration:underline}
 .textarea_txt{width:95%}
 
 .fieldset { margin:0 0 24px; padding:0 13px 13px; border:1px solid #cfcfcf; }
-.fieldset .legend { font-size:14px; margin:0 -13px 13px; padding:5px 13px; background:#fafafa url(../images/bkg_heading.gif) 0 100% repeat-x; color:#343434; position:relative; z-index:1; }
+.fieldset .legend { font-size:14px; margin:0 -13px 13px; padding:5px 13px; background:#fafafa  0 100% repeat-x; color:#343434; position:relative; z-index:1; }
 
 input.qty { width:25px !important; }
 .prompt-error{color:#D40707 !important;}
@@ -466,7 +466,7 @@ input.qty { width:25px !important; }
 .account-login .content { padding:20px ;height:200px}
 .account-login .font16, .cont1 .font16 { padding:0 20px 10px }
 .account-login .content h2 {font-weight:bold; font-size:14px; margin:0 0 8px; padding:11px 0 0; color:#c7000a; }
-.account-login .col2-set .col-1 {background:url(../images/bkg_dots3.gif) repeat-y right 0; }
+.account-login .col2-set .col-1 {background: repeat-y right 0; }
 .account-login .col2-set .col-2 { }
 .account-login .font16 { text-indent:-9999px ; background:url(./images/t_access.png) no-repeat;}
 .account-login .registered-users li{margin:0}
@@ -561,7 +561,7 @@ input.qty { width:25px !important; }
 
 
 .help-nav{background:#f3f3e9; border:1px solid #dbdbdb; border-right:0}
-.help-nav h3{ color:#000; height:30px; line-height:30px; font-weight:bold; background:url(../images/navs.gif) 0 -530px repeat-x;}
+.help-nav h3{ color:#000; height:30px; line-height:30px; font-weight:bold; background: 0 -530px repeat-x;}
 .help-nav h3 span{ padding-left:30px;}
 .help-nav li{ height:30px; line-height:30px; border-top:1px solid #e5e5e5; border-bottom:1px solid #f7f7f7; position:relative}
 .help-nav li a{ color:#535353; font-weight:bold; display:block; height:100%; width:100%; text-indent:28px;}
@@ -569,7 +569,7 @@ input.qty { width:25px !important; }
 .help-nav li a:hover{ text-decoration:none; color:#bc290f;}
 
 
-.help-nav li.active span{ display:block; position:absolute; width:198px; height:30px; color:#fff; font-weight:bold; left:0; top:0; text-indent:28px; background:#b3985e url(../images/icon-infos.gif) no-repeat right -170px }
+.help-nav li.active span{ display:block; position:absolute; width:198px; height:30px; color:#fff; font-weight:bold; left:0; top:0; text-indent:28px; background:#b3985e url(./images/icon-infos.gif) no-repeat right -170px }
 
 .help-content{ width:727px; padding: 30px 37px; background:#fff; border:1px solid #dbdbdb; float:right}
 .help-content dl{}
