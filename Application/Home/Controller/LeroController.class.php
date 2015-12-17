@@ -1,6 +1,6 @@
 <?php
 namespace Home\Controller;
-use Home\Controller;
+use Think\Controller;
 class LeroController extends AdminController {
     public function index(){
 

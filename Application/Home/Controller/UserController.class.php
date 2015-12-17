@@ -8,13 +8,13 @@ class UserController extends Controller{
     }
     
     public function index(){
-        $this->display('Index/login');
+        $this->display('User/index');
     }
     
     /*
      * 进行登陆
      * 
-     * TODO :登陆验证，验证码检测
+     *
      */
     public function login(){
         $refer_page = $_SERVER['HTTP_REFERER'];
@@ -45,6 +45,17 @@ class UserController extends Controller{
         $this->assign('msg',$msg);
 //        var_dump($msg);
         $this->display('Index/login');
+    }
+
+
+    public function lero_login(){
+        $username = I('identity');
+        $password = I('password');
+
+        $user = M('User');
+        $user_info = $user->where('username=%d AND password =%d',array($username,$password))->field('username')->select();
+        session('user_name',$user_info);
+        redirect('/Home/Lero/index');
     }
 
     /*

@@ -44,6 +44,7 @@ class IndexController extends Controller {
 
     public function show_msg(){
         I('get.p');
+
         $this->display();
     }
 
