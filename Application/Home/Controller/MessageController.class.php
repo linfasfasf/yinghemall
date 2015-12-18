@@ -13,7 +13,7 @@ class MessageController extends Controller {
     }
 
     public function show_msg(){
-        $tea = D('guanyintea');
+        $tea = D('Guanyintea');
         $tea_info  = $tea->get_product_by_id();
         $this->assign('product_suggest',$this->product_suggest());
 
@@ -59,8 +59,6 @@ class MessageController extends Controller {
             $this->assign('pay_num',$pay_num);
         }
 
-//        dump($cart_info);
-//        var_dump($data);
         $this->assign('session_info',session('cart_info'));//session必须重新取一次
         $this->display('Index/cart');
     }

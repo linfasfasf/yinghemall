@@ -53,12 +53,24 @@ class GuanyinteaModel extends Model{
         return $tea->where('product_id =%d',$product_id)->select();
     }
 
+    /*
+     * 推荐商品
+     * return array
+     */
     public function product_suggest($num){
         $tea = M('Guanyintea');
         $info = $tea->where('is_show=%d',1)->field('product_id,new_price,title')->limit($num)->select();
         return $info;
     }
 
-
+    public function order_by(){
+        $order  = I('order');
+        $dir    = I('dir');
+        $page_show_num  = C('PAGE_SHOW_NUM');
+        $tea    = M('Guanyintea');
+        $result = $tea->where('is_show=%d',1)->order(array($order=>$dir))->limit($page_show_num)->select();
+        var_dump($result);
+        die();
+    }
 
 }
