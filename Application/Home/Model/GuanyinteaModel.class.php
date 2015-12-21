@@ -63,14 +63,12 @@ class GuanyinteaModel extends Model{
         return $info;
     }
 
-    public function order_by(){
+    public function order_by($len){
         $order  = I('order');
         $dir    = I('dir');
-        $page_show_num  = C('PAGE_SHOW_NUM');
         $tea    = M('Guanyintea');
-        $result = $tea->where('is_show=%d',1)->order(array($order=>$dir))->limit($page_show_num)->select();
-        var_dump($result);
-        die();
+        $result = $tea->where('is_show=%d',1)->order(array($order=>$dir))->limit($len)->select();
+        return $result;
     }
 
 }

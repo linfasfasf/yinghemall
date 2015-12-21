@@ -41,8 +41,16 @@ class IndexController extends Controller {
     }
 
     public function order_by(){
-        $tea    = D('Guanyintea');
-        $result = $tea->order_by();
+        $tea          = D('Guanyintea');
+        $len          = C('PAGE_SHOW_NUM');
+        $product_info = $tea->order_by($len);
+        $count        = $tea->get_product_total_num();
+
+        $this->assign('current_page',$p=1);
+        $this->assign('total_product',$count);
+        $this->assign('total_page_add',intval(ceil($count/6)+1));
+        $this->assign('product_info',$product_info);
+        $this->display('index');
     }
 
 
