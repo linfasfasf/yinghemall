@@ -54,47 +54,7 @@
                 </a>
             </div>
 
-            <script type="text/javascript">
-                $.ajax({
-                    type:"get",
-                    url:"{:U('Home/message/get_cart_info_ajax')}",
-                    dataType:"json",
-                    success:function(res){
-                        $.each(res,function(key,value){
-                            $("#div1").text(value['total_num']).css({"color":"red"});
-                            $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
-                        });
-                    }
-                });
 
-                function addToCart(obj){
-                    var product_num = $('#qty').val();
-                    var product_id = "{$product_info['product_id']}";
-                    $.ajax({
-                        type:"post",
-                        url:"{:U('Home/message/ajax_add_cart')}",
-                        data:"product_id="+product_id+"&product_num="+product_num,
-                        dataType:"json",
-                        success:function(res){
-                            $.each(res,function(n,value){
-                                $("#div1").text(value['total_num']).css({"color":"red"});
-                                $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
-                            });
-
-
-                        }
-                    });
-                }
-
-                function Buy_now(obj){
-                    var product_num = $('#qty').val();
-
-                    var product_id  = "{$product_info['product_id']}";
-                    var url = "{:U('Home/Message/buy_now')}?product_id="+product_id+'&product_num='+product_num;
-                    window.location =url;
-                }
-
-            </script>
 
 
 
@@ -246,118 +206,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <script type="text/javascript">
-                            //<![CDATA[
 
-                            (function(){
-
-                                var btn_next = $('#btn_next');
-
-                                var btn_prev = $('#btn_prev')
-
-                                var ul = btn_next.next().find('ul');
-
-
-                                ul.find('li').bind({
-                                    click: function() {
-                                        $(this).parent().find('li').removeClass('on');
-                                        $(this).parent().data('index', $(this).index());
-                                        $(this).addClass('on');
-                                        jSelectImage($(this).index());
-                                    },
-                                    mouseover: function () {
-                                        $(this).parent().find('li').removeClass('on');
-                                        $(this).addClass('on');
-                                        if ($(this).index() != $(this).parent().data('index'))
-                                            $(this).parent().find('li').eq($(this).parent().data('index')).addClass('on');
-                                    },
-                                    mouseout: function () {
-                                        if ($(this).index() != $(this).parent().data('index'))
-                                            $(this).removeClass('on');
-                                    }
-                                });
-                                ul.find('li:first').trigger('click');
-
-                                var len = ul.find('li').length;
-                                if(len <5){
-                                    $("span.next").hide();
-                                }
-
-                                var i = 0 ;
-
-                                if (len > 4) {
-
-
-
-                                    ul.css("width", 88 * len)
-
-                                    btn_next.click(function(e) {
-
-                                        if(i>=len-4){return;}
-
-                                        i++;
-
-                                        moveS(i);
-
-                                        e.preventDefault();
-
-                                        $(this).removeClass("on");
-
-                                    }).mouseover(function(e) {
-
-                                        //if (!this.enab)  return;
-
-                                        $(this).addClass("on");
-
-                                    }).mouseout(function(e) {
-
-                                        //if (!this.enab)  return;
-
-                                        $(this).removeClass("on");
-
-                                    });
-
-
-
-                                    btn_prev.click(function(e) {
-
-                                        if(i<=0){return;}
-
-                                        i--;
-
-                                        moveS(i);
-
-                                        e.preventDefault();
-
-                                        $(this).removeClass("on");
-
-                                    }).mouseover(function(e) {
-                                        //if (!this.enab)  return;
-
-                                        $(this).addClass("on");
-
-
-                                    }).mouseout(function(e) {
-
-                                        //if (!this.enab)  return;
-
-                                        $(this).removeClass("on");
-
-                                    });
-
-                                }
-
-                                function moveS(i) {
-
-                                    ul.animate({marginLeft:-88 * i}, 500)
-
-                                }
-
-                            })();
-
-
-                            //]]>
-                        </script>
 
 
 
@@ -654,56 +503,158 @@
     </div>
 </div>
 <div id="global_dialog" style="display:none; overflow:hidden;"></div>
+
+</body>
 <script type="text/javascript">
-    //<![CDATA[
-    (function($){
-        $(function(){
-            $("#global_dialog").dialog({
-                autoOpen: false,
-                draggable: false,
-                modal: true
+    $.ajax({
+        type:"get",
+        url:"{:U('Home/message/get_cart_info_ajax')}",
+        dataType:"json",
+        success:function(res){
+            $.each(res,function(key,value){
+                $("#div1").text(value['total_num']).css({"color":"red"});
+                $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
             });
+        }
+    });
 
-            $("#errorblock").dialog({
-                autoOpen: false,
-                modal: true,
-                width: 450,
-                dialogClass: 'erroralert',
-                title: '提醒'
-            }).find(".closeerror").click(function(){
-                $(this).parent().parent().dialog('close');
-            });
+    function addToCart(obj){
+        var product_num = $('#qty').val();
+        var product_id = "{$product_info['product_id']}";
+        $.ajax({
+            type:"post",
+            url:"{:U('Home/message/ajax_add_cart')}",
+            data:"product_id="+product_id+"&product_num="+product_num,
+            dataType:"json",
+            success:function(res){
+                $.each(res,function(n,value){
+                    $("#div1").text(value['total_num']).css({"color":"red"});
+                    $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
+                });
 
-            window.alertDialog = function(msg){
-                $("#errorblock .layer_global_tit").html(msg);
-                $("#errorblock").dialog('open');
-            };
 
-            window.loginDialog = function(){
-                var $dialog = $("#global_dialog").dialog('option', {width:450, height:260, title:'登陆'});
-                var html = $dialog.data('login_data');
-                if (html) {
-                    $dialog.html(html).dialog('open');
-                }else {
-                    $dialog.load("http://www.8ma.net/customer/account/loginmini/", function(html){
-                        $dialog.data('login_data', html).dialog('open');
-                    });
-                }
-            };
-
-            window.checkoutLinkDialog = function(){
-                var $dialog = $("#global_dialog").dialog('option', {width: 580, height: 280,title: '登陆'});
-                var html = $dialog.data('checkout_link_data');
-                if (html) {
-                    $dialog.html(html).dialog('open');
-                }else {
-                    $dialog.load("http://www.8ma.net/checkout/cart/link/", function(html){
-                        $dialog.data('checkout_link_data', html).dialog('open');
-                    });
-                }
-            };
+            }
         });
-    })(jQuery);
+    }
+
+    function Buy_now(obj){
+        var product_num = $('#qty').val();
+
+        var product_id  = "{$product_info['product_id']}";
+        var url = "{:U('Home/Message/buy_now')}?product_id="+product_id+'&product_num='+product_num;
+        window.location =url;
+    }
+
+
+    //<![CDATA[ 显示图片详细信息，轮播
+
+    (function(){
+
+        var btn_next = $('#btn_next');
+
+        var btn_prev = $('#btn_prev')
+
+        var ul = btn_next.next().find('ul');
+
+
+        ul.find('li').bind({
+            click: function() {
+                $(this).parent().find('li').removeClass('on');
+                $(this).parent().data('index', $(this).index());
+                $(this).addClass('on');
+                jSelectImage($(this).index());
+            },
+            mouseover: function () {
+                $(this).parent().find('li').removeClass('on');
+                $(this).addClass('on');
+                if ($(this).index() != $(this).parent().data('index'))
+                    $(this).parent().find('li').eq($(this).parent().data('index')).addClass('on');
+            },
+            mouseout: function () {
+                if ($(this).index() != $(this).parent().data('index'))
+                    $(this).removeClass('on');
+            }
+        });
+        ul.find('li:first').trigger('click');
+
+        var len = ul.find('li').length;
+        if(len <5){
+            $("span.next").hide();
+        }
+
+        var i = 0 ;
+
+        if (len > 4) {
+
+
+
+            ul.css("width", 88 * len)
+
+            btn_next.click(function(e) {
+
+                if(i>=len-4){return;}
+
+                i++;
+
+                moveS(i);
+
+                e.preventDefault();
+
+                $(this).removeClass("on");
+
+            }).mouseover(function(e) {
+
+                //if (!this.enab)  return;
+
+                $(this).addClass("on");
+
+            }).mouseout(function(e) {
+
+                //if (!this.enab)  return;
+
+                $(this).removeClass("on");
+
+            });
+
+
+
+            btn_prev.click(function(e) {
+
+                if(i<=0){return;}
+
+                i--;
+
+                moveS(i);
+
+                e.preventDefault();
+
+                $(this).removeClass("on");
+
+            }).mouseover(function(e) {
+                //if (!this.enab)  return;
+
+                $(this).addClass("on");
+
+
+            }).mouseout(function(e) {
+
+                //if (!this.enab)  return;
+
+                $(this).removeClass("on");
+
+            });
+
+        }
+
+        function moveS(i) {
+
+            ul.animate({marginLeft:-88 * i}, 500)
+
+        }
+
+    })();
+
+
     //]]>
-</script></body>
+</script>
 </html>

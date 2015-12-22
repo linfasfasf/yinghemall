@@ -27,24 +27,7 @@
     <link rel="stylesheet" type="text/css" href="http://www.8ma.net/skin/frontend/base/default/css/styles-ie.css" media="all" />
     <![endif]-->
 </head>
-<script type="text/javascript">
 
-    $.ajax({
-        type:"get",
-        url:"{:U('Home/message/get_cart_info_ajax')}",
-        dataType:"json",
-        success:function(res){
-            $.each(res,function(key,value){
-                $("#div1").text(value['total_num']).css({"color":"red"});
-                $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
-
-            });
-        }
-    });
-
-
-
-</script>
 <body class=" catalog-category-view categorypath-tea-tieguanyin-html category-tieguanyin">
 
 <div id="header">
@@ -76,7 +59,7 @@
         </div>
         <div class="mainnav">
             <ul class="lefta">
-                <li><a href="">首页</a></li>
+                <li><a href="{:U('Home/index/index')}">首页</a></li>
                 <li><a class="link10" href="{:U('Home/index/index')}"><span> 铁观音</span></a></li>
 
             </ul>
@@ -418,7 +401,7 @@
     </div>
     <div class="btn"></div>
 </div>
-
+<script language='javascript' src='http://www.8ma.net/skin/frontend/default/bamatea/js/scrolltopcontrol.js' type='text/javascript' charset='utf-8'></script>//显示客服中心js文件
 
 <div id="errorblock" style="display:none; overflow:hidden;">
     <b class="icon icon_msg4 icon_msg4_warn"></b>
@@ -428,56 +411,24 @@
     </div>
 </div>
 <div id="global_dialog" style="display:none; overflow:hidden;"></div>
+
+</body>
 <script type="text/javascript">
-    //<![CDATA[
-    (function($){
-        $(function(){
-            $("#global_dialog").dialog({
-                autoOpen: false,
-                draggable: false,
-                modal: true
+
+    $.ajax({
+        type:"get",
+        url:"{:U('Home/message/get_cart_info_ajax')}",
+        dataType:"json",
+        success:function(res){
+            $.each(res,function(key,value){
+                $("#div1").text(value['total_num']).css({"color":"red"});
+                $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
+
             });
+        }
+    });
 
-            $("#errorblock").dialog({
-                autoOpen: false,
-                modal: true,
-                width: 450,
-                dialogClass: 'erroralert',
-                title: '提醒'
-            }).find(".closeerror").click(function(){
-                $(this).parent().parent().dialog('close');
-            });
 
-            window.alertDialog = function(msg){
-                $("#errorblock .layer_global_tit").html(msg);
-                $("#errorblock").dialog('open');
-            };
 
-            window.loginDialog = function(){
-                var $dialog = $("#global_dialog").dialog('option', {width:450, height:260, title:'登陆'});
-                var html = $dialog.data('login_data');
-                if (html) {
-                    $dialog.html(html).dialog('open');
-                }else {
-                    $dialog.load("http://www.8ma.net/customer/account/loginmini/", function(html){
-                        $dialog.data('login_data', html).dialog('open');
-                    });
-                }
-            };
-
-//            window.checkoutLinkDialog = function(){
-//                var $dialog = $("#global_dialog").dialog('option', {width: 580, height: 280,title: '登陆'});
-//                var html = $dialog.data('checkout_link_data');
-//                if (html) {
-//                    $dialog.html(html).dialog('open');
-//                }else {
-//                    $dialog.load("http://www.8ma.net/checkout/cart/link/", function(html){
-//                        $dialog.data('checkout_link_data', html).dialog('open');
-//                    });
-//                }
-//            };
-        });
-    })(jQuery);
-    //]]>
-</script></body>
+</script>
 </html>

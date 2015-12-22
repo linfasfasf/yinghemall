@@ -115,7 +115,9 @@
         <div id="cart-container">
             <div class="cartpage clearfix">
                 <h2 class="step-title">购物车</h2>
+
                 <form id="cart-form" action="javascript:void(0);" method="post">
+
                     <table id="shopping-cart-table" class="cart-table">
                         <col width="80"/>
                         <col/>
@@ -133,32 +135,48 @@
                             <th>操作</th>
                         </tr>
                         </thead>
+                        <empty name="product_info">
+
+                           <tr>
+                               <td>
+                                   <h1>购物车中暂无商品哦~</h1>
+                               </td>
+                               <td>
+                                   <a href="{:U('Home/Index/index')}" class="btn_common">前去购买商品</a>
+                               </td>
+                           </tr>
+                            <else />
                         <tbody>
+
+
+
+
                         <foreach name="product_info" item="info">
                             <tr>
                                 <td><a href="{:U('Home/Message/show_msg')}?product_id={$info['product_id']}" title="{$info['title']}">
-                            <span class="table_first img"><img src="__PUBLIC__/tea/{$info['product_id']}/mini.jpg" alt="{$info['title']}" />
-                            </span></a></td>
-                                <td><dl class="product_row">
+                                <span class="table_first img"><img src="__PUBLIC__/tea/{$info['product_id']}/mini.jpg" alt="{$info['title']}" /></span></a>
+                                </td>
+                                <td>
+                                    <dl class="product_row">
                                     <dt class="product-name">
                                         <a href="{:U('Home/Message/show_msg')}?product_id={$info['product_id']}">{$info['title']}</a>
                                         <input type="hidden" value="0" name="cart[49974][wishlist]" />
                                     </dt>
-
+                                    </dl>
                                 </td>
                                 <td>
-            <span class="cart-price2">
-            <span class="price">￥{$info['new_price']}</span>		</span>
+                                    <span class="cart-price2">
+                                    <span class="price">￥{$info['new_price']}</span>		</span>
                                 </td>
 
                                 <td class="s-amount">
-                                    <a class="minus" href="javascript:void(0);">-</a>
-                                    <input type="text" name="cart[49974][qty]" id="car_num" value="{$session_info[$info['product_id']]['product_num']}" size="1000" title="数量" class="input-text qty" maxlength="12" />
-                                    <a class="plus" href="javascript:void(0);">+</a>
+
+                                    <input type="text"  id="car_num" value="{$session_info[$info['product_id']]['product_num']}"  class="input-text qty"  />
+
                                 </td>
                                 <td>
-            <span class="cart-price1">
-            <span class="price"><div id="num_{$info['product_id']}">￥{$pay_num}</div></span>		</span>
+                                    <span class="cart-price1">
+                                    <span class="price"><div id="num_{$info['product_id']}">￥{$pay_num}</div></span>		</span>
                                 </td>
                                 <td>
                                     <a href="http://www.8ma.net/checkout/cart/delete/id/49974/uenc/aHR0cDovL3d3dy44bWEubmV0L2NoZWNrb3V0L2NhcnQv/" title="删除记录" class="btn-remove2">
@@ -166,14 +184,19 @@
                                 </td>
                             </tr>
                         </foreach>
+
                         </tbody>
+
+                        </empty>
                         <tfoot></tfoot>
                     </table>
                 </form>
+
+
                 <div class="cart-table clearfix" style="border: none; margin: 0 0 15px; ">
                     <div class="clear">
                         <b class="icon icon_clear"></b>
-                        <a class="btn-continue" href="#" onclick="location.href='http://www.8ma.net/checkout/cart/clear/'">清空购物车</a>
+                        <a class="btn-continue" href="{:U('Home/message/del')}" >清空购物车</a>
                     </div>
                     <div class="totals">
                         <dl>
@@ -189,7 +212,7 @@
                                 </dd>    </tfoot>
                             </table>             </dl>
                         <div class="checkout-types">
-                            <a href="#" class="btn_common" onclick="setLocation('http://www.8ma.net/')">继续购物</a>
+                            <a href="{:U('Home/Index/index')}" class="btn_common" >继续购物</a>
                             <input class="btn-checkout" onclick="javascript:checkoutLinkDialog();" value="结 帐" />
                         </div>
                         <p class="gre">如果您有优惠券/礼品卡，请在下一步结账过程中使用</p>
@@ -356,56 +379,5 @@
     </div>
 </div>
 <div id="global_dialog" style="display:none; overflow:hidden;"></div>
-<script type="text/javascript">
-    //<![CDATA[
-    (function($){
-        $(function(){
-            $("#global_dialog").dialog({
-                autoOpen: false,
-                draggable: false,
-                modal: true
-            });
-
-            $("#errorblock").dialog({
-                autoOpen: false,
-                modal: true,
-                width: 450,
-                dialogClass: 'erroralert',
-                title: '提醒'
-            }).find(".closeerror").click(function(){
-                $(this).parent().parent().dialog('close');
-            });
-
-            window.alertDialog = function(msg){
-                $("#errorblock .layer_global_tit").html(msg);
-                $("#errorblock").dialog('open');
-            };
-
-            window.loginDialog = function(){
-                var $dialog = $("#global_dialog").dialog('option', {width:450, height:260, title:'登陆'});
-                var html = $dialog.data('login_data');
-                if (html) {
-                    $dialog.html(html).dialog('open');
-                }else {
-                    $dialog.load("http://www.8ma.net/customer/account/loginmini/", function(html){
-                        $dialog.data('login_data', html).dialog('open');
-                    });
-                }
-            };
-
-            window.checkoutLinkDialog = function(){
-                var $dialog = $("#global_dialog").dialog('option', {width: 580, height: 280,title: '登陆'});
-                var html = $dialog.data('checkout_link_data');
-                if (html) {
-                    $dialog.html(html).dialog('open');
-                }else {
-                    $dialog.load("http://www.8ma.net/checkout/cart/link/", function(html){
-                        $dialog.data('checkout_link_data', html).dialog('open');
-                    });
-                }
-            };
-        });
-    })(jQuery);
-    //]]>
-</script></body>
+</body>
 </html>

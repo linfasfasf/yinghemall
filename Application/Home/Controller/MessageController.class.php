@@ -21,6 +21,9 @@ class MessageController extends Controller {
         $this->display('Index/show_msg');
     }
 
+    /*
+     * 立即购买，将商品数量添加到session中，根据商品信息计算出支付金额,跳转到下单界面
+     */
     public function buy_now(){
         $product_num = I('product_num');
         $product_id  = I('product_id');
@@ -46,7 +49,8 @@ class MessageController extends Controller {
             $this->assign('pay_num',$pay_num);
         }
         else{
-            $data       = $cart->add_cart();//将商品信息添加一次
+//            $data       = $cart->add_cart();//将商品信息添加一次
+            $data       = session('cart_info');//如果购物车中有商品则不再添加商品信息到购物车，防止刷新购物车界面商品自动增加
             $pay_num    = 0;
             $tea_info   = array();
             foreach($data as $key_product_id =>$value){
@@ -64,14 +68,19 @@ class MessageController extends Controller {
     }
 
     /*
-     * 显示购物车信息，显示session中的商品信息
+     * 显示购物车信息，显示session中的商品信息,跳转到下单界面
      */
     public function cart_info(){
         $cart_info = session('cart_info');
         $tea       = D('Guanyintea');
+        $pay_num   = 0;
         foreach ($cart_info as $item=>$value) {
             $tea_info  = $tea->get_product_by_id_return_arr($item);
+            foreach($tea_info as $product_detail){
+                $pay_num += $product_detail['new_price'] * $value['product_num'];
+            }
         }
+        $this->assign('pay_num',$pay_num);
         $this->assign('product_info',$tea_info);
         $this->assign('session_info',session('cart_info'));
         $this->display('Index/cart');
@@ -103,11 +112,12 @@ class MessageController extends Controller {
     }
 
     /*
-     * 删除session信息
+     * 清空购物车，删除session信息
      */
     public function del(){
         $tea = D('Cart');
         $tea->del();
+        $this->display('Index/cart');
     }
 
     public function modify_ajax(){
