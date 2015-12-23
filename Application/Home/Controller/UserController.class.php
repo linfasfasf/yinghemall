@@ -8,7 +8,7 @@ class UserController extends Controller{
     }
     
     public function index(){
-        $this->display('User/index');
+        $this->display('Index/login');
     }
     
     /*
@@ -20,7 +20,6 @@ class UserController extends Controller{
         $refer_page = $_SERVER['HTTP_REFERER'];
         session('refer_page',$refer_page);
         $user_info = session('user_info');
-
         if(isset($user_info)){
             $msg        = '您已登录，无须重复登录！';
             $this->assign('refer_page',session('refer_page'));

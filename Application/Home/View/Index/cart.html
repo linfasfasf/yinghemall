@@ -7,8 +7,6 @@
     <meta name="description" content="颖和商城" />
     <meta name="keywords" content="颖和商城" />
     <meta name="robots" content="INDEX,FOLLOW" />
-    <link rel="icon" href="http://www.8ma.net/skin/frontend/default/bamatea/favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="http://www.8ma.net/skin/frontend/default/bamatea/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/bama/basic.css" media="all" />
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/bama/style.css" media="all" />
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/bama/lightness.custom.css" media="all" />
@@ -26,6 +24,7 @@
     <link rel="stylesheet" type="text/css" href="http://www.8ma.net/skin/frontend/base/default/css/styles-ie.css" media="all" />
     <![endif]-->
 </head>
+
 <body class=" checkout-cart-index">
 
 <script type="text/javascript">
@@ -35,10 +34,15 @@
         url:"{:U('Home/message/get_cart_info_ajax')}",
         dataType:"json",
         success:function(res){
-            $.each(res,function(key,value){
-                $("#div1").text(value['total_num']).css({"color":"red"});
-                $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
+            $("#div2").remove();
 
+            $.each(res,function(key,value){
+
+                if(key == 'total_num') {
+                    $("#div1").text(value);
+                }else {
+                    $('#div3').append(value['title']+"*"+value['product_num']+"<br>").addClass('name');
+                }
             });
         }
     });
@@ -55,9 +59,9 @@
                 <span class="bnt"><div id="div1">购物车</div></span>
 
                 <a href="{:U('Home/Message/cart_info')}">
-                    <div class="cart-content">
+                    <div class="cart-content" id="div3">
                         <div class="empty"id ='div2'>您的购物车中暂无商品，赶快选择心爱的商品吧！</div>
-                        <div class="empty"id="div3"></div>
+
 
                     </div>
                 </a>
@@ -66,8 +70,8 @@
 
             <ul class="links">
                 <li class="first" ><a href="{:U('Home/User/register')}" title="注册" class='reg'><span>注册</span></a></li>
-                <li ><a href="http://www.8ma.net/customer/account/login/referer/aHR0cDovL3d3dy44bWEubmV0L2NoZWNrb3V0L2NhcnQvaW5kZXgvP19fX1NJRD1V/" title="登录" class='login'><span>登录</span></a></li>
-                <li class=" last" ><a href="http://www.8ma.net/upcard/query/" title="礼节卡查询" target='_blank'><span>礼节卡查询</span></a></li>
+                <li ><a href="{:U('Home/User/login')}" title="登录" class='login'><span>登录</span></a></li>
+
             </ul>
 
             <div class="tel400"></div>
@@ -149,17 +153,17 @@
                         <tbody>
 
 
-
-
                         <foreach name="product_info" item="info">
+
+
                             <tr>
-                                <td><a href="{:U('Home/Message/show_msg')}?product_id={$info['product_id']}" title="{$info['title']}">
-                                <span class="table_first img"><img src="__PUBLIC__/tea/{$info['product_id']}/mini.jpg" alt="{$info['title']}" /></span></a>
+                                <td><a href="{:U('Home/Message/show_msg')}?product_id={$key}" title="{$info['title']}">
+                                <span class="table_first img"><img src="__PUBLIC__/tea/{$key}/mini.jpg" alt="{$info['title']}" /></span></a>
                                 </td>
                                 <td>
                                     <dl class="product_row">
                                     <dt class="product-name">
-                                        <a href="{:U('Home/Message/show_msg')}?product_id={$info['product_id']}">{$info['title']}</a>
+                                        <a href="{:U('Home/Message/show_msg')}?product_id={$key}">{$info['title']}</a>
                                         <input type="hidden" value="0" name="cart[49974][wishlist]" />
                                     </dt>
                                     </dl>
@@ -171,19 +175,63 @@
 
                                 <td class="s-amount">
 
-                                    <input type="text"  id="car_num" value="{$session_info[$info['product_id']]['product_num']}"  class="input-text qty"  />
+                                    <input type="text"  id="car_num" value="{$info['product_num']}"  class="input-text qty" disabled="disabled" />
 
                                 </td>
                                 <td>
                                     <span class="cart-price1">
-                                    <span class="price"><div id="num_{$info['product_id']}">￥{$pay_num}</div></span>		</span>
+                                    <span class="price"><div id="num_{$key}">￥{$pay_info[$key]}</div></span>		</span>
                                 </td>
                                 <td>
                                     <a href="http://www.8ma.net/checkout/cart/delete/id/49974/uenc/aHR0cDovL3d3dy44bWEubmV0L2NoZWNrb3V0L2NhcnQv/" title="删除记录" class="btn-remove2">
                                         删除商品		</a>
                                 </td>
-                            </tr>
+                            </tr> <script type="text/javascript">
+                            for(var i =0;i<{$pay_info['num']};i++) {
+                                var product_pay_num = $("#num_{$key}");
+                                var input_var = $('#car_num');
+                                var total_pay_num = $("#total_num");
+                                input_var.change(function () {
+                                    $.ajax({
+
+                                        type: "get",
+                                        url: "{:U('Home/message/modify_product_num_ajax')}",
+                                        data: "product_num_ajax=" + input_var.val() + "&product_id_ajax=" + {$key},
+                                        dataType: "json",
+                                        success: function (res) {
+                                            a()
+                                            $.each(res, function (n, value) {
+                                                        if (n == 'total_num') {
+                                                            total_pay_num.text('￥' + value);
+                                                        } else {
+                                                            product_pay_num.text('￥' + value);
+                                                        }
+
+                                                    }
+                                            );
+                                        }
+                                    })
+
+                                });
+
+                                var a = function () {
+                                    $.ajax({
+                                        type: "get",
+                                        url: "{:U('Home/message/get_cart_info_ajax')}",
+                                        dataType: "json",
+                                        success: function (res) {
+                                            $.each(res, function (key, value) {
+                                                $("#div1").text(value['total_num']).css({"color": "red"});
+                                                $("#div2").text(value['title'] + ' * ' + value['product_num']).css({"color": "red"});
+
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        </script>
                         </foreach>
+
 
                         </tbody>
 
@@ -207,7 +255,7 @@
                                 <dd class="totle">
                                     总额 (不含运费):
                                     <strong>
-                                        <span><span class="price"><div id="total_num">￥{$pay_num}</div></span></span>
+                                        <span><span class="price"><div id="total_num">￥{$pay_info['total_num']}</div></span></span>
                                     </strong>
                                 </dd>    </tfoot>
                             </table>             </dl>
@@ -224,72 +272,9 @@
         </div>
 
         <div id="loading" style="display:none"><div class="item">&nbsp;</div></div>
-        <script type="text/javascript">
-            //<![CDATA[
-
-            (function($){
-
-                var product_num = {$session_info[$info['product_id']]['product_num']};
-                var product_id  = {$info['product_id']};
-                $("#loading").ajaxStart(function(){
-                    $(this).dialog({modal: true, closeOnEscape: false,stack: false, dialogClass: 'alert'});
-                    $("#send_order").attr("disabled","disabled");
-
-                }).ajaxStop(function(){
-                    $(this).dialog('close');
-                    $("#send_order").removeAttr("disabled");
-                });
-
-                $("#cart-form .minus").live('click', function(){
-                    var qty = $(this).siblings('.qty');
-                    var amount = parseInt(qty.val()) - 1;
-                    if (amount > 0) {
-                        qty.val(amount).trigger('change');
-                    }
-                    return false;
-                });
-
-                $("#cart-form .plus").live('click', function(){
-                    var qty = $(this).siblings('.qty');
-                    qty.val(parseInt(qty.val()) + 1);
-//                    product_num++;
-                    alert(product_num);
-                    $.ajax({
-                        type:"get",
-                        url:"{:U('Home/Message/modify_ajax')}",
-                        data:"product_id="+product_id+"&product_num="+product_num,
-                        dataType:"json",
-                        success:function(res){
-                            $.each(res,function(n,value){
-                                alert(value);
-                                $("#num_{$info['product_id']}").text(value);
-                            });
-                        }
-                    });
-
-                    return false;
-                });
 
 
-
-                $('#shopping-cart-table tbody tr .s-amount .qty').live('change', function(){
-                    var formEl = $("#cart-form");
-                    if (formEl.size()) {
-                        $.post("http://www.8ma.net/checkout/cart/modify/", formEl.serialize(), function(json){
-                            if(json){json = $.parseJSON(json);}else{json = {};}
-                            if (json.error) {
-                                alertDialog(json.error);
-                                return ;
-                            }
-                            if (json.html) {
-                                $("#cart-container").html(json.html);
-                            }
-                        });
-                    }
-                });
-            })(jQuery);
-            //]]>
-        </script>	</div>
+    </div>
 </div>
 <div id="footer">
     <div class="container clearfix">
@@ -380,4 +365,5 @@
 </div>
 <div id="global_dialog" style="display:none; overflow:hidden;"></div>
 </body>
+
 </html>

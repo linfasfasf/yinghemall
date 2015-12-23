@@ -23,6 +23,10 @@ class MessageController extends Controller {
 
     /*
      * 立即购买，将商品数量添加到session中，根据商品信息计算出支付金额,跳转到下单界面
+     *  12/23 修改逻辑，
+     * 1.当购物车中无商品时，将信息直接添加进购物车
+     * 2，当购物车中有商品，且添加的商品与购物车一致时，此时点击购买，数量不增加，此为防止购物车界面刷新自动增加商品数量
+     * 3当购物车中有商品，且添加的商品与购物车中不一致时，此时会将新商品添加到购物车中
      */
     public function buy_now(){
         $product_num = I('product_num');
@@ -31,6 +35,8 @@ class MessageController extends Controller {
         if(empty($product_num) ||empty($product_id)){
             $this->ajaxReturn('param error');
         }
+        $pay_data   = array();
+        $total_num  = 0;
 
         $cart_info  = session('cart_info');
         $cart       = D('Cart');
@@ -38,29 +44,49 @@ class MessageController extends Controller {
 
         //是否是第一次添加商品
         if(empty($cart_info)){
-            $data     = $cart->add_cart();
+            $data     = $cart->modify_cart();
             $tea_info  = array();
             foreach($data as $key_product_id =>$value){
                 $tea_info = $tea->get_product_by_id_return_arr($key_product_id);
-            }
-            $pay_num  = $tea_info['new_price']*$data['product_num'];
-
-            $this->assign('product_info',$tea_info);
-            $this->assign('pay_num',$pay_num);
-        }
-        else{
-//            $data       = $cart->add_cart();//将商品信息添加一次
-            $data       = session('cart_info');//如果购物车中有商品则不再添加商品信息到购物车，防止刷新购物车界面商品自动增加
-            $pay_num    = 0;
-            $tea_info   = array();
-            foreach($data as $key_product_id =>$value){
-                $tea_info = array_merge($tea_info,$tea->get_product_by_id_return_arr($key_product_id));//将商品信息获取拼接成数组
                 foreach($tea_info as $product_detail){
-                    $pay_num += $product_detail['new_price'] * $value['product_num'];
+                    $pay_num  = $product_detail['new_price'] * $value['product_num'];
+                    $pay_data       = $pay_data+array($key_product_id=>$pay_num);//用+键名才不会重新编号
+                    $total_num  = $total_num + $pay_num;
+                    $cart_info[$key_product_id] = $product_detail;
+                    $cart_info[$key_product_id]['product_num'] = $product_num;
                 }
             }
-            $this->assign('product_info',$tea_info);
-            $this->assign('pay_num',$pay_num);
+            $pay_data['total_num']  = $total_num ;
+            $pay_data['num']         = count($cart_info);
+            $this->assign('pay_info',$pay_data);
+            $this->assign('product_info',$cart_info);
+        }else{
+            if(!array_key_exists($product_id,$cart_info)){
+                $data       = $cart->modify_cart();//将商品信息添加一次
+            }else{
+                $data       = session('cart_info');//如果购物车中有商品则不再添加商品信息到购物车，防止刷新购物车界面商品自动增加
+            }
+            $pay_num    = 0;
+            $tea_info   = array();
+
+            foreach($data as $key_product_id =>$value){
+                $tea_info = $tea->get_product_by_id_return_arr($key_product_id);//将商品信息获取拼接成数组
+                foreach($tea_info as $product_detail){
+                    $pay_num = $product_detail['new_price'] * $value['product_num'];
+                    $pay_data       = $pay_data+array($key_product_id=>$pay_num);//用+键名才不会重新编号
+                    $total_num  = $total_num + $pay_num;
+                    $data[$key_product_id]['new_price']       = $product_detail['new_price'];
+                    $data[$key_product_id]['title']            =  $product_detail['title'];
+                    $data[$key_product_id]['product_num']     =  $value['product_num'];
+                }
+//                var_dump($product_detail);
+//                var_dump($cart_info);
+            }
+//            var_dump($pay_data);
+            $pay_data['total_num']  = $total_num ;
+            $pay_data['num']         = count($data);
+            $this->assign('pay_info',$pay_data);
+            $this->assign('product_info',$data);
         }
 
         $this->assign('session_info',session('cart_info'));//session必须重新取一次
@@ -74,14 +100,24 @@ class MessageController extends Controller {
         $cart_info = session('cart_info');
         $tea       = D('Guanyintea');
         $pay_num   = 0;
+        $data      = array();
+        $total_num = 0;
         foreach ($cart_info as $item=>$value) {
             $tea_info  = $tea->get_product_by_id_return_arr($item);
-            foreach($tea_info as $product_detail){
-                $pay_num += $product_detail['new_price'] * $value['product_num'];
+            foreach($tea_info as $product_id => $product_detail){
+                $pay_num = $product_detail['new_price'] * $value['product_num'];
+                $data       = $data+array($item=>$pay_num);//用+键名才不会重新编号
+                $total_num  = $total_num + $pay_num;
+                $cart_info[$item]['new_price'] = $product_detail['new_price'];
             }
         }
-        $this->assign('pay_num',$pay_num);
-        $this->assign('product_info',$tea_info);
+        $data['total_num']  = $total_num ;
+        $data['num']         = count($cart_info);
+//        var_dump($tea_info);
+//        var_dump($data);
+        $this->assign('pay_info',$data);
+        $this->assign('product_info',$cart_info);
+//        var_dump(count($cart_info));
         $this->assign('session_info',session('cart_info'));
         $this->display('Index/cart');
     }
@@ -91,7 +127,16 @@ class MessageController extends Controller {
      * 获取购物车信息
      */
     public function get_cart_info_ajax(){
-        $this->ajaxReturn(session('cart_info'));
+        $cart_info  =   session('cart_info');
+        $total_product_num    =   0;
+        foreach($cart_info as $cart_info_detail){
+            $total_product_num    =   $total_product_num + $cart_info_detail['product_num'];
+        }
+        $data   = $cart_info + array('total_num'=>$total_product_num);
+
+//        var_dump($data);
+//        die();
+        $this->ajaxReturn($data);
     }
 
     /*
@@ -103,12 +148,14 @@ class MessageController extends Controller {
     }
 
     /*
-     * Ajax添加到购物车
+     * Ajax添加到购物车,show_msg 界面
      */
-    public function ajax_add_cart(){
+    public function add_cart_ajax(){
         $tea = D('Cart');
-        $data = $tea->add_cart();
-        $this->ajaxReturn($data);
+        $product_id     = I('product_id');
+        $product_num    = I('product_num');
+        $tea->modify_cart($product_id,$product_num,true);
+        return $this->get_cart_info_ajax();
     }
 
     /*
@@ -124,16 +171,52 @@ class MessageController extends Controller {
         $cart       = D('Cart');
         $tea        = D("guanyintea");
         $data       = array();
-        $cart_info  = $cart->add_cart();
+        $cart_info  = $cart->modify_cart();
 
         foreach ($cart_info as $item =>$value) {
             $product_info = $tea->get_product_by_id_return_arr($item);
             foreach($product_info as $product_detail){
                 $pay_num = $product_detail['new_price'] * $value['product_num'];
-                $data = $data+array($item=>$pay_num);//用+键名才不会中心编号
+                $data = $data+array($item=>$pay_num);//用+键名才不会重新编号
             }
         }
         $this->ajaxReturn($data);
+    }
+
+    /*
+     * 根据修改商品数量，返回商品的支付价格以及所有商品的支付金额
+     */
+    public function modify_product_num_ajax(){
+        $product_num_ajax    =  I('product_num_ajax');
+        $product_id_ajax     =  I('product_id_ajax');
+        $cart                =  D('Cart');
+        $tea                 =  D('Guanyintea');
+        $data                =  array();
+        $total_num           =  0;
+
+        $cart_info = $cart->modify_cart($product_id_ajax,$product_num_ajax,true);
+        foreach($cart_info as $item =>$value){
+            $product_info   =   $tea->get_product_by_id_return_arr($item);
+            foreach($product_info as $product_detail){
+                $pay_num    = $product_detail['new_price'] * $value['product_num'];
+                $data       = $data+array($item=>$pay_num);//用+键名才不会重新编号
+                $total_num  = $total_num + $pay_num;
+            }
+        }
+        $data   = $data + array('total_num'=>$total_num);
+        $this->ajaxReturn($data);
+//        var_dump($cart_info);
+//        var_dump($product_info);
+//        var_dump($data);
+//        die();
+    }
+
+    /*
+     *  TODO 获取商品的支付金额
+     *  抽出是否有意义？是否只是加大消耗而已
+     */
+    protected function get_pay_num(){
+
     }
 
     public function test(){

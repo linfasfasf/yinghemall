@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
 <head>
-    <title>{$product_info['title']}| 颖和茶业官方商城</title>
+    <title>颖和茶业| 颖和茶业官方商城</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="description" content="&lt;div style=&quot;width: 790.0px; padding-bottom: 40.0px;&quot;&gt;
 &lt;div style=&quot;text-align: center; padding-bottom: 40.0px; border-bottom-color: #ffffff; border-bottom-width: 1.0px; border-bottom-style: solid; background-color: #fbfbfb;&quot;&gt;&lt;img src=&quot;http://img04.taobaoc" />
@@ -46,9 +46,9 @@
                 <span class="bnt"><div id="div1">购物车</div></span>
 
                 <a href="{:U('Home/Message/cart_info')}">
-                    <div class="cart-content">
+                    <div class="cart-content" id="div3">
                         <div class="empty"id ='div2'>您的购物车中暂无商品，赶快选择心爱的商品吧！</div>
-                        <div class="empty"id="div3"></div>
+
 
                     </div>
                 </a>
@@ -506,31 +506,46 @@
 
 </body>
 <script type="text/javascript">
-    $.ajax({
-        type:"get",
-        url:"{:U('Home/message/get_cart_info_ajax')}",
-        dataType:"json",
-        success:function(res){
-            $.each(res,function(key,value){
-                $("#div1").text(value['total_num']).css({"color":"red"});
-                $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
-            });
-        }
-    });
+   var  a =function() {
+       $.ajax({
+           type: "get",
+           url: "{:U('Home/message/get_cart_info_ajax')}",
+           dataType: "json",
+           success: function (res) {
+               $("#div2").remove();
+
+               $.each(res, function (key, value) {
+
+                   if (key == 'total_num') {
+                       $("#div1").text(value);
+                   } else {
+                       $('#div3').append(value['title'] + "*" + value['product_num'] + "<br>").addClass('name');
+                   }
+               });
+           }
+       });
+   }
+   a();
 
     function addToCart(obj){
         var product_num = $('#qty').val();
         var product_id = "{$product_info['product_id']}";
         $.ajax({
             type:"post",
-            url:"{:U('Home/message/ajax_add_cart')}",
+            url:"{:U('Home/message/add_cart_ajax')}",
             data:"product_id="+product_id+"&product_num="+product_num,
             dataType:"json",
             success:function(res){
-                $.each(res,function(n,value){
-                    $("#div1").text(value['total_num']).css({"color":"red"});
-                    $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
-                });
+                a();
+//                $("#div2").remove();
+//                $.each(res,function(n,value){
+//                    alert(value);
+//                    if(key == 'total_num') {
+//                        $("#div1").text(value);
+//                    }else {
+//                        $('#div3').append(value['title']+"*"+value['product_num']+"<br>").addClass('name');
+//                    }
+//                });
 
 
             }

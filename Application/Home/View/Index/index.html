@@ -40,9 +40,8 @@
                 <span class="bnt"><div id="div1">购物车</div></span>
 
                 <a href="{:U('Home/Message/cart_info')}">
-                    <div class="cart-content">
+                    <div class="cart-content" id="div3">
                         <div class="empty"id ='div2'>您的购物车中暂无商品，赶快选择心爱的商品吧！</div>
-                        <div class="empty"id="div3"></div>
 
                     </div>
                 </a>
@@ -420,10 +419,15 @@
         url:"{:U('Home/message/get_cart_info_ajax')}",
         dataType:"json",
         success:function(res){
-            $.each(res,function(key,value){
-                $("#div1").text(value['total_num']).css({"color":"red"});
-                $("#div2").text(value['title']+' * '+value['product_num']).css({"color":"red"});
+            $("#div2").remove();
 
+            $.each(res,function(key,value){
+
+                if(key == 'total_num') {
+                    $("#div1").text(value);
+                }else {
+                    $('#div3').append(value['title']+"*"+value['product_num']+"<br>").addClass('name');
+                }
             });
         }
     });
