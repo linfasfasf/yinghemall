@@ -45,13 +45,9 @@ class CartModel extends Model{
                 }
             }
         }
-//        var_dump($cartinfo);
         $data =$this->array_merge_key_exist($cartinfo,$data);
-//        var_dump($data);
 //        $data = $cartinfo + $data;// 多商品开关
 //        $data = array_merge($data,$cartinfo);//array_merge 会将键名覆盖然后按数字增加排序
-//        var_dump($data);
-//        die();
         session('cart_info',$data);
         return session('cart_info');
     }

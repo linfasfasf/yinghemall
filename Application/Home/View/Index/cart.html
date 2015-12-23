@@ -34,7 +34,9 @@
         url:"{:U('Home/message/get_cart_info_ajax')}",
         dataType:"json",
         success:function(res){
-            $("#div2").remove();
+            if(res['total_num']!=0) {
+                $("#div2").remove();
+            }
 
             $.each(res,function(key,value){
 
@@ -183,7 +185,7 @@
                                     <span class="price"><div id="num_{$key}">￥{$pay_info[$key]}</div></span>		</span>
                                 </td>
                                 <td>
-                                    <a href="http://www.8ma.net/checkout/cart/delete/id/49974/uenc/aHR0cDovL3d3dy44bWEubmV0L2NoZWNrb3V0L2NhcnQv/" title="删除记录" class="btn-remove2">
+                                    <a href="{:U('Home/Message/del_product')}?product_id={$key}" title="删除记录" class="btn-remove2">
                                         删除商品		</a>
                                 </td>
                             </tr> <script type="text/javascript">

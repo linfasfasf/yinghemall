@@ -512,7 +512,9 @@
            url: "{:U('Home/message/get_cart_info_ajax')}",
            dataType: "json",
            success: function (res) {
-               $("#div2").remove();
+               if(res['total_num']!=0) {
+                   $("#div2").remove();
+               }
 
                $.each(res, function (key, value) {
 

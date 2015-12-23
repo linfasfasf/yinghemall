@@ -79,10 +79,7 @@ class MessageController extends Controller {
                     $data[$key_product_id]['title']            =  $product_detail['title'];
                     $data[$key_product_id]['product_num']     =  $value['product_num'];
                 }
-//                var_dump($product_detail);
-//                var_dump($cart_info);
             }
-//            var_dump($pay_data);
             $pay_data['total_num']  = $total_num ;
             $pay_data['num']         = count($data);
             $this->assign('pay_info',$pay_data);
@@ -113,11 +110,8 @@ class MessageController extends Controller {
         }
         $data['total_num']  = $total_num ;
         $data['num']         = count($cart_info);
-//        var_dump($tea_info);
-//        var_dump($data);
         $this->assign('pay_info',$data);
         $this->assign('product_info',$cart_info);
-//        var_dump(count($cart_info));
         $this->assign('session_info',session('cart_info'));
         $this->display('Index/cart');
     }
@@ -134,8 +128,6 @@ class MessageController extends Controller {
         }
         $data   = $cart_info + array('total_num'=>$total_product_num);
 
-//        var_dump($data);
-//        die();
         $this->ajaxReturn($data);
     }
 
@@ -205,10 +197,28 @@ class MessageController extends Controller {
         }
         $data   = $data + array('total_num'=>$total_num);
         $this->ajaxReturn($data);
-//        var_dump($cart_info);
-//        var_dump($product_info);
-//        var_dump($data);
-//        die();
+    }
+
+    /*
+     *
+     */
+    public function del_product(){
+        $product_id     = I('product_id');
+        $cart_info      = session('cart_info');
+
+        if(empty($product_id) || !array_key_exists($product_id,$cart_info)){
+            return 'del product error';
+        }
+
+        foreach($cart_info as $key =>$value){
+            if($key == $product_id){
+                unset($cart_info[$key]);
+            }
+        }
+        session('cart_info',$cart_info);
+
+        $this->cart_info();
+        exit();
     }
 
     /*
