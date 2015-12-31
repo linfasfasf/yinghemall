@@ -1,7 +1,10 @@
 <?php
 namespace Home\Controller;
+use Think\Cache\Driver\Redis;
 use Think\Controller;
+use Think\Cache;
 class IndexController extends Controller {
+
     /*
      * 显示首页信息
      */
@@ -64,5 +67,10 @@ class IndexController extends Controller {
         $product_id = I('value');
         echo 1;
     }
+
+
+    public function test(){
+    }
+
 
 }
