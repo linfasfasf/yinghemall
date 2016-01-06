@@ -70,7 +70,18 @@ class IndexController extends Controller {
 
 
     public function test(){
-    }
-
+        $user = M('user');
+        $sql = 'SELECT * FROM user';
+        $result = $user->query($sql);
+        var_dump($result);
+//        die();
+        $redis  = new Redis();
+        foreach($result as $value){
+            $redis->set("user:username".$value['uid'],$value['username']); //user:1000=> lero_lin
+            $redis->set("user:password".$value['uid'],$value['password']);
+            $redis->set("user:mobile".$value['mobile'],$value['mobile']);
+            $redis->set("user:username:uid".$value['username'],$value['uid']);
+        }
+}
 
 }
