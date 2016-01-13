@@ -11,8 +11,8 @@ class IndexController extends Controller {
     public function index(){
         $tea = D('Home/Guanyintea');
         $len = C('PAGE_SHOW_NUM');
-        $product_info = $tea->get_product_info_index($len);
-        $count        = $tea->get_product_total_num();
+        $product_info = $tea->get_product_info_index_redis($len);
+        $count        = $tea->get_product_total_num_redis();
         if(count($product_info)==0 && $count ==0){
             die('get message error');
         }
@@ -31,8 +31,8 @@ class IndexController extends Controller {
         $page = I('get.p');
         $tea = D('Home/Guanyintea');
         $len =C('PAGE_SHOW_NUM');
-        $product_info = $tea->get_product_info_page($page,$len);
-        $count        = $tea->get_product_total_num();
+        $product_info = $tea->get_product_info_page_redis($page,$len);
+        $count        = $tea->get_product_total_num_redis();
         if(count($product_info)==0 && $count ==0){
             $product_info = '';
         }
@@ -46,8 +46,8 @@ class IndexController extends Controller {
     public function order_by(){
         $tea          = D('Guanyintea');
         $len          = C('PAGE_SHOW_NUM');
-        $product_info = $tea->order_by($len);
-        $count        = $tea->get_product_total_num();
+        $product_info = $tea->order_by_redis($len);
+        $count        = $tea->get_product_total_num_redis();
 
         $this->assign('current_page',$p=1);
         $this->assign('total_product',$count);
@@ -70,18 +70,11 @@ class IndexController extends Controller {
 
 
     public function test(){
-        $user = M('user');
-        $sql = 'SELECT * FROM user';
-        $result = $user->query($sql);
+        $user = D('guanyintea');
+        $res = $user->order_by_redis(5);
+        var_dump($res);
+        $result = $user->order_by(5);
         var_dump($result);
-//        die();
-        $redis  = new Redis();
-        foreach($result as $value){
-            $redis->set("user:username".$value['uid'],$value['username']); //user:1000=> lero_lin
-            $redis->set("user:password".$value['uid'],$value['password']);
-            $redis->set("user:mobile".$value['mobile'],$value['mobile']);
-            $redis->set("user:username:uid".$value['username'],$value['uid']);
-        }
-}
+    }
 
 }
