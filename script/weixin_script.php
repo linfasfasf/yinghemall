@@ -1,10 +1,17 @@
 <?php
 error_reporting(-1);
+define('DEBUG', true);
 main();
-
+$skey='';
+$wxsid = '';
+$wxuin = '';
+$pass_ticket = '';
 $redirect_url = '';
+$My = array();
+$ContactList = array();
+$baserequest = array();
 function main(){
-	global $redirect_url;
+	global $redirect_url,$base_url;
 	$uuid = getUUID();
 	
 	$tip  = show_QRImage($uuid);
@@ -14,7 +21,14 @@ function main(){
 		}
 	}
 	echo $redirect_url;
-		
+	if(login()){
+		printf('login fail');
+	}
+	$base_url='http://wx.qq.com/cgi-bin/mmwebwx-bin';
+	if (!webwxinit()) {
+		printf('init fail');
+	}
+	// getcontact();
 
 }
 function getUUID(){
@@ -71,11 +85,9 @@ function wait_for_login($tip,$uuid){
 	global $redirect_url;
 	$url = 'http://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip='.$tip.'&uuid='.$uuid.'&_='.time();
 	echo $url;
-	echo "test";
 	$result = file_get_contents($url);
 	preg_match('/window.code=(\d+);/', $result,$match);
 	$code = $match[1];
-	echo "test2";
 	if ($code == '201') {
 		echo '成功扫描,请在手机上点击确认以登录'.PHP_EOL;
 		
@@ -89,8 +101,92 @@ function wait_for_login($tip,$uuid){
 	return $code;
 }
 function login(){
-	global $redirect_url;
+	global $redirect_url,$baserequest,$skey, $wxsid, $wxuin, $pass_ticket;
 	$xml = file_get_contents($redirect_url);
+	$xml = simplexml_load_string($xml);
+	// print_r($xml);
+	$skey = (string)$xml->skey;
+	$wxsid = (string)$xml->wxsid;
+	$wxuin = (string)$xml->wxuin;
+	$pass_ticket = (string)$xml->pass_ticket;
+	// var_dump($skey);
+	$baserequest  = array(
+		'Uin' =>$wxuin,
+		'Sid' =>$wxsid,
+		'Skey'=>$skey,
+		'DeviceID'=>'e000000000000000'
+		);
+	return true;
+}
+function webwxinit(){
+	global $base_url,$baserequest,$pass_ticket,$skey;
+	$json_info = json_encode(array('BaseRequest'=>$baserequest));
+	$url = $base_url.'/webwxinit?pass_ticket='.$pass_ticket.'&skey='.$skey.'&r='.time();
+	echo $url;
+	var_dump($baserequest);
+
+	var_dump($json_info);
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $json_info);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=UTF-8'));
+	$result = curl_exec($ch);
+	curl_close($ch);
+	// var_dump($result);
+
+	global $My,$ContactList;
+	$result  = json_decode($result,true);
+	var_dump($result);
+
+	$ErrMsg = $result['BaseResponse']['ErrMsg'];
+	$Ret 	= $result['BaseResponse']['Ret'];
+	$My 	= $result['User'];
+	$ContactList = $result['ContactList'];
+
+	if (DEBUG) {
+		var_dump($ContactList);
+	}
+	if ($Ret != 0) {
+		return false;
+	}else{
+		return true;
+	}
 
 }
-	
+
+function getcontact(){
+	global $skey,$pass_ticket,$base_url;
+
+	$url = $base_url.'/webwxgetcontact?pass_ticket='.$pass_ticket.'&skey='.$skey.'&r='.time();
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	// curl_setopt($ch, CURLOPT_POST, 1);
+	// curl_setopt($ch, CURLOPT_POSTFIELDS, $jsoninfo);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array('ContentType: application/json; charset=UTF-8'));
+	$result = curl_exec($ch);
+	if (DEBUG) {
+		var_dump($result);
+	}
+	$result_decode = json_decode($result,true);
+	// var_dump($result_decode);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
